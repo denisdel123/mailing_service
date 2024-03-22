@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView
 
-from mailingApp.models import Client, Massage, Periodicity, Setting, Mailings
+from mailingApp.models import Client, Massage, Attempt, Mailing
 
 
 class ClientCreateView(CreateView):
@@ -46,13 +46,17 @@ class ClientDeleteView(DeleteView):
 class MassageCreateView(CreateView):
     model = Massage
     fields = ('title', 'text',)
-    success_url = reverse_lazy('#')
+    success_url = reverse_lazy('mailingApp:massage_list')
 
 
 class MassageUpdateView(UpdateView):
     model = Massage
     fields = ('title', 'text',)
-    success_url = reverse_lazy('#')
+
+    def get_success_url(self):
+        object_id = self.object.pk
+        detail_url = reverse_lazy('mailingApp:massage_detail', kwargs={'pk': object_id})
+        return detail_url
 
 
 class MassageListView(ListView):
@@ -62,82 +66,46 @@ class MassageListView(ListView):
 class MassageDetailView(DetailView):
     model = Massage
 
+    def get_success_url(self):
+        object_id = self.object.pk
+        detail_url = reverse_lazy('mailingApp:massage_detail', kwargs={'pk': object_id})
+        return detail_url
+
 
 class MassageDeleteView(DeleteView):
     model = Massage
-    success_url = reverse_lazy('#')
+    success_url = reverse_lazy('mailingApp:massage_list')
 
 
-class PeriodicityCreateView(CreateView):
-    model = Periodicity
-    fields = ('name', 'periodicity',)
-    success_url = reverse_lazy('#')
+class MailingCreateView(CreateView):
+    model = Mailing
+    fields = ('name', 'description', 'periodicity', 'at_start', 'at_end', 'status', 'massage', 'client',)
+    success_url = reverse_lazy('mailingApp:mailing_list')
 
 
-class PeriodicityUpdateView(UpdateView):
-    model = Periodicity
-    fields = ('name', 'periodicity',)
-    success_url = reverse_lazy('#')
+class MailingUpdateView(UpdateView):
+    model = Mailing
+    fields = ('name', 'description', 'periodicity', 'at_start', 'at_end', 'status', 'massage', 'client',)
+
+    def get_success_url(self):
+        object_id = self.object.pk
+        detail_url = reverse_lazy('mailingApp:mailing_detail', kwargs={'pk': object_id})
+        return detail_url
 
 
-class PeriodicityListView(ListView):
-    model = Periodicity
+class MailingListView(ListView):
+    model = Mailing
 
 
-class PeriodicityDetailView(DetailView):
-    model = Periodicity
+class MailingDetailView(DetailView):
+    model = Mailing
+
+    def get_success_url(self):
+        object_id = self.object.pk
+        detail_url = reverse_lazy('mailingApp:mailing_detail', kwargs={'pk': object_id})
+        return detail_url
 
 
-class PeriodicityDeleteView(DeleteView):
-    model = Periodicity
-    success_url = reverse_lazy('#')
-
-
-class SettingCreateView(CreateView):
-    model = Setting
-    fields = ('name', 'at_start', 'at_end', 'periodicity',)
-    success_url = reverse_lazy('#')
-
-
-class SettingUpdateView(UpdateView):
-    model = Setting
-    fields = ('name', 'at_start', 'at_end', 'periodicity',)
-    success_url = reverse_lazy('#')
-
-
-class SettingListView(ListView):
-    model = Setting
-
-
-class SettingDetailView(DetailView):
-    model = Setting
-
-
-class SettingDeleteView(DeleteView):
-    model = Setting
-    success_url = reverse_lazy('#')
-
-
-class MailingsCreateView(CreateView):
-    model = Mailings
-    fields = ('name', 'description', 'setting', 'massage', 'client',)
-    success_url = reverse_lazy('#')
-
-
-class MailingsUpdateView(UpdateView):
-    model = Mailings
-    fields = ('name', 'description', 'setting', 'massage', 'client',)
-    success_url = reverse_lazy('#')
-
-
-class MailingsListView(ListView):
-    model = Mailings
-
-
-class MailingsDetailView(DetailView):
-    model = Mailings
-
-
-class MailingsDeleteView(DeleteView):
-    model = Mailings
-    success_url = reverse_lazy('#')
+class MailingDeleteView(DeleteView):
+    model = Mailing
+    success_url = reverse_lazy('mailingApp:mailing_list')

@@ -2,15 +2,11 @@ from django.urls import path
 
 from mailingApp.apps import MailingappConfig
 from mailingApp.views import ClientListView, main, ClientCreateView, ClientUpdateView, ClientDetailView, \
-    ClientDeleteView, SettingListView, PeriodicityCreateView, PeriodicityListView, PeriodicityUpdateView, \
-    PeriodicityDetailView, PeriodicityDeleteView, MailingsListView, MailingsCreateView, MailingsUpdateView, \
-    MailingsDetailView, MailingsDeleteView
+    ClientDeleteView, MailingListView, MailingCreateView, MailingUpdateView, \
+    MailingDetailView, MailingDeleteView, MassageListView, MassageCreateView, MassageDetailView, MassageUpdateView, \
+    MassageDeleteView
 
 app_name = MailingappConfig.name
-
-
-
-
 
 urlpatterns = [
 
@@ -22,16 +18,16 @@ urlpatterns = [
     path('client/update/<int:pk>', ClientUpdateView.as_view(), name='client_update'),
     path('client/delete/<int:pk>', ClientDeleteView.as_view(), name='client_delete'),
 
-    path('mailing/list', MailingsListView.as_view(), name='mailing_list'),
-    path('mailing/create', MailingsCreateView.as_view(), name='mailing_create'),
-    path('mailing/update/<int:pk>', MailingsUpdateView.as_view(), name='mailing_update'),
-    path('mailing/detail/<int:pk>', MailingsDetailView.as_view(), name='mailing_detail'),
-    path('mailing/delete<int:pk>', MailingsDeleteView.as_view(), name='mailing_delete'),
+    path('massage/list/', MassageListView.as_view(), name='massage_list'),
+    path('massage/create/', MassageCreateView.as_view(), name='massage_create'),
+    path('massage/<int:pk>', MassageDetailView.as_view(), name='massage_detail'),
+    path('massage/update/<int:pk>', MassageUpdateView.as_view(), name='massage_update'),
+    path('massage/delete/<int:pk>', MassageDeleteView.as_view(), name='massage_delete'),
 
-    path('periodicity/list', PeriodicityListView.as_view(), name='periodicity_list'),
-    path('periodicity/create', PeriodicityCreateView.as_view(), name='periodicity_create'),
-    path('periodicity/update/<int:pk>', PeriodicityUpdateView.as_view(), name='periodicity_update'),
-    path('periodicity/detail/<int:pk>', PeriodicityDetailView.as_view(), name='periodicity_detail'),
-    path('periodicity/delete<int:pk>', PeriodicityDeleteView.as_view(), name='periodicity_delete'),
+    path('mailing/list', MailingListView.as_view(), name='mailing_list'),
+    path('mailing/create', MailingCreateView.as_view(), name='mailing_create'),
+    path('mailing/detail/<int:pk>', MailingDetailView.as_view(), name='mailing_detail'),
+    path('mailing/update/<int:pk>', MailingUpdateView.as_view(), name='mailing_update'),
+    path('mailing/delete<int:pk>', MailingDeleteView.as_view(), name='mailing_delete'),
 
 ]

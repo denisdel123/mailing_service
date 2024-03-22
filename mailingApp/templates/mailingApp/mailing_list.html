@@ -5,7 +5,7 @@
 <div class="my-3 p-3 bg-body rounded shadow-sm">
 
     <small class="d-block text-end mt-3">
-        <a href="{% url 'mailingApp:client_create' %}">Создать рассылку</a>
+        <a href="{% url 'mailingApp:mailing_create' %}">Создать рассылку</a>
     </small>
 
     <h6 class="border-bottom pb-2 mb-0">Рассылки</h6>
@@ -22,8 +22,8 @@
         <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
             <div class="d-flex justify-content-between">
                 <strong class="text-gray-dark">{{ object.name }}</strong>
-                <strong class="text-gray-dark">{{ object.client_count }}</strong>
-                <a href="{% url 'mailingApp:client_detail' object.pk %}">Перейти</a>
+                <strong class="text-gray-dark">{{ object.status.status }}</strong>
+                <a href="{% url 'mailingApp:mailing_detail' object.pk %}">Перейти</a>
             </div>
 
             <span class="d-block">mail</span>

@@ -1,23 +1,16 @@
 {% extends 'mailingApp/base.html' %}
 {% block content %}
 <tr>
-    <h1>Персональные данные</h1>
+    <h1>Рассылка</h1>
 </tr>
 <div class="col-lg-9 col-md-6 col-sm-12">
     <div class="card mb-4 box-shadow">
         <div class="card-body">
             <table class="table table-striped">
+
                 <tr>
-                    <td class="w-25">Имя</td>
-                    <td>{{ object.first_name }}</td>
-                </tr>
-                <tr>
-                    <td class="w-25">Фамилия</td>
-                    <td>{{ object.last_name }}</td>
-                </tr>
-                <tr>
-                    <td class="w-25">email</td>
-                    <td>{{ object.email }}</td>
+                    <td class="w-25">Название</td>
+                    <td>{{ object.name }}</td>
                 </tr>
 
                 <tr>
@@ -27,17 +20,89 @@
                     {% else %}
                     <td>Нет описания</td>
                     {% endif %}
-
                 </tr>
 
                 <tr>
-                    <td class="w-25">рассылка</td>
-                    <td></td>
+                    <td class="w-25">Периодичность</td>
+                    <td>{{object.periodicity}}</td>
                 </tr>
 
+                <tr>
+                    <td class="w-25">Следующая отправка</td>
+                    <td>Число отправки</td>
+                </tr>
+
+                <tr>
+                    <td class="w-25">Срок действия</td>
+                    <td>{{object.at_start}} - {{object.at_end}}</td>
+                </tr>
+
+                <tr>
+                    <td class="w-25">Статус</td>
+                    {% if object.status %}
+                    <td>{{object.status}}</td>
+                    {% else %}
+                    <td>нет</td>
+                    {% endif %}
+                </tr>
+
+                <tr>
+                    <td class="w-25">Дата последней Отправки</td>
+                    {% if object.attempt.at_last_attempt%}
+                    <td>{{ object.attempt.at_last_attempt }}</td>
+                    {% else%}
+                    <td>Отправки не было</td>
+                    {% endif %}
+                </tr>
+
+                <tr>
+                    <td class="w-25">Статус последней отправки</td>
+                    {% if object.attempt.status_attempt %}
+                    <td>Успешно</td>
+                    {% else%}
+                    <td>Не успешно</td>
+                    {% endif %}
+                </tr>
+
+                <tr>
+                    <td class="w-25">Ответ последней отправки</td>
+                    {% if object.attempt.answer_mail %}
+                    <td>{{ object.attempt.answer_mail }}</td>
+                    {% else%}
+                    <td>Нет ответа</td>
+                    {% endif %}
+                </tr>
+
+                <tr>
+                    <td class="w-25">Кол-во Клиентов</td>
+                    <td>
+                        <div>0</div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="w-25">Клиенты</td>
+                    <td>
+                        {% for client in object.client.all %}
+                        <div>{{ client.first_name }}</div>
+                        {% endfor%}
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td class="w-25">Тема сообщения</td>
+                    <td>{{ object.massage.title }}</td>
+                </tr>
+
+                <tr>
+                    <td class="w-25">Тело сообщения</td>
+                    <td>{{ object.massage.text }}</td>
+                </tr>
             </table>
-            <a href="{% url 'mailingApp:client_update' object.pk %}" class="btn btn-lg btn-block btn-outline-primary">Редактировать</a>
-            <a href="{% url 'mailingApp:client_delete' object.pk %}" class="btn btn-lg btn-block btn-outline-primary">удалить</a>
+            <a href="{% url 'mailingApp:mailing_list'%}" class="btn btn-lg btn-block btn-outline-primary">Назад</a>
+            <a href="{% url 'mailingApp:mailing_update' object.pk %}" class="btn btn-lg btn-block btn-outline-primary">Редактировать</a>
+            <a href="{% url 'mailingApp:mailing_delete' object.pk %}" class="btn btn-lg btn-block btn-outline-primary">удалить</a>
         </div>
     </div>
 </div>

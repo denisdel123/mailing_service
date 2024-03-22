@@ -5,10 +5,10 @@
 <div class="my-3 p-3 bg-body rounded shadow-sm">
 
     <small class="d-block text-end mt-3">
-        <a href="{% url 'mailingApp:client_create' %}">создать пользователя</a>
+        <a href="{% url 'mailingApp:massage_create' %}">Создать Сообщение</a>
     </small>
 
-    <h6 class="border-bottom pb-2 mb-0">Пользователи</h6>
+    <h6 class="border-bottom pb-2 mb-0">Сообщения</h6>
     {% for object in object_list %}
     <div class="d-flex text-body-secondary pt-3">
 
@@ -21,11 +21,12 @@
 
         <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
             <div class="d-flex justify-content-between">
-                <strong class="text-gray-dark">{{ object.first_name}} {{ object.last_name }}</strong>
-                <a href="{% url 'mailingApp:client_detail' object.pk %}">Перейти</a>
+                <strong class="text-gray-dark">{{ object.title|truncatechars:10 }}</strong>
+                <strong class="text-gray-dark">{{ object.text|truncatechars:10 }}</strong>
+                <a href="{% url 'mailingApp:massage_detail' object.pk %}">Перейти</a>
             </div>
 
-            <span class="d-block">{{ object.email }}</span>
+            <span class="d-block">mail</span>
         </div>
     </div>
     {% endfor%}

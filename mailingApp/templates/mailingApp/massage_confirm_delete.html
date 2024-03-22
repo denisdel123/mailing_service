@@ -1,3 +1,5 @@
+{% extends 'mailingApp/base.html' %}
+{% block content %}
 <div class="container">
     <main>
         <form method="post" enctype="multipart/form-data">
@@ -8,13 +10,14 @@
                     <form class="needs-validation" novalidate>
 
                         <hr class="my-4">
-                        <p>Вы действительно хотите удалить {{ object.first_name }}?</p>
+                        <p>Вы действительно хотите удалить?</p>
 
                         <button class="btn btn-danger btn-lg" type="submit">Удалить</button>
-                        <a href="{% url 'mailingApp:client_detail' object.pk %}" class="btn btn-warning">Отмена</a>
+                        <a href="{% url 'mailingApp:massage_detail' object.pk %}" class="btn btn-warning">Отмена</a>
                     </form>
                 </div>
             </div>
         </form>
     </main>
 </div>
+{% endblock %}
