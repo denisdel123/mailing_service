@@ -1,0 +1,44 @@
+{% extends 'mailingApp/base.html' %}
+{% block content %}
+<tr>
+    <h1>Статус отправки</h1>
+</tr>
+<div class="col-lg-9 col-md-6 col-sm-12">
+    <div class="card mb-4 box-shadow">
+        <div class="card-body">
+            <table class="table table-striped">
+
+
+                <tr>
+                    <td class="w-25">Дата последней попытки</td>
+                    {% if object.at_last_attempt %}
+                    <td>{{ object.at_last_attempt }}</td>
+                    {% else%}
+                    <td>Отправки не было</td>
+                    {% endif %}
+                </tr>
+
+                <tr>
+                    <td class="w-25">Статус последней попытки</td>
+                    {% if object.status_attempt %}
+                    <td>Успешно</td>
+                    {% else%}
+                    <td>Не успешно</td>
+                    {% endif %}
+                </tr>
+
+                <tr>
+                    <td class="w-25">Ответ последней попытки</td>
+                    {% if object.answer_mail %}
+                    <td>{{ object.answer_mail }}</td>
+                    {% else%}
+                    <td>Нет ответа</td>
+                    {% endif %}
+                </tr>
+
+            </table>
+            <a href="{% url 'mailingApp:mailing_detail' object.mailing.pk %}" class="btn btn-lg btn-block btn-outline-primary">Назад</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

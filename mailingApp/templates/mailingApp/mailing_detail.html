@@ -29,7 +29,7 @@
 
                 <tr>
                     <td class="w-25">Следующая отправка</td>
-                    <td>Число отправки</td>
+                    <td>{{ object.next_run }}</td>
                 </tr>
 
                 <tr>
@@ -101,6 +101,7 @@
                 </tr>
             </table>
             <a href="{% url 'mailingApp:mailing_list'%}" class="btn btn-lg btn-block btn-outline-primary">Назад</a>
+            <a href="{% url 'mailingApp:attempt_list' object.pk %}" class="btn btn-lg btn-block btn-outline-primary">Статус</a>
             <a href="{% url 'mailingApp:mailing_update' object.pk %}" class="btn btn-lg btn-block btn-outline-primary">Редактировать</a>
             <a href="{% url 'mailingApp:mailing_delete' object.pk %}" class="btn btn-lg btn-block btn-outline-primary">удалить</a>
         </div>
