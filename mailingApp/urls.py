@@ -4,7 +4,7 @@ from mailingApp.apps import MailingappConfig
 from mailingApp.views import ClientListView, main, ClientCreateView, ClientUpdateView, ClientDetailView, \
     ClientDeleteView, MailingListView, MailingCreateView, MailingUpdateView, \
     MailingDetailView, MailingDeleteView, MassageListView, MassageCreateView, MassageDetailView, MassageUpdateView, \
-    MassageDeleteView
+    MassageDeleteView, AttemptListView, AttemptDetailView
 
 app_name = MailingappConfig.name
 
@@ -23,6 +23,10 @@ urlpatterns = [
     path('massage/<int:pk>', MassageDetailView.as_view(), name='massage_detail'),
     path('massage/update/<int:pk>', MassageUpdateView.as_view(), name='massage_update'),
     path('massage/delete/<int:pk>', MassageDeleteView.as_view(), name='massage_delete'),
+
+    path('mailing/<int:mailing_id>/attempt/list/', AttemptListView.as_view(), name='attempt_list'),
+    path('attempt/detail/<int:pk>', AttemptDetailView.as_view(), name='attempt_detail'),
+
 
     path('mailing/list', MailingListView.as_view(), name='mailing_list'),
     path('mailing/create', MailingCreateView.as_view(), name='mailing_create'),

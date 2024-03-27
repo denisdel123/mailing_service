@@ -79,13 +79,13 @@ class MassageDeleteView(DeleteView):
 
 class MailingCreateView(CreateView):
     model = Mailing
-    fields = ('name', 'description', 'periodicity', 'at_start', 'at_end', 'status', 'massage', 'client',)
+    fields = ('name', 'description', 'periodicity', 'at_start', 'at_end', 'massage', 'client', 'next_run',)
     success_url = reverse_lazy('mailingApp:mailing_list')
 
 
 class MailingUpdateView(UpdateView):
     model = Mailing
-    fields = ('name', 'description', 'periodicity', 'at_start', 'at_end', 'status', 'massage', 'client',)
+    fields = ('name', 'description', 'periodicity', 'at_start', 'at_end', 'massage', 'client', 'next_run',)
 
     def get_success_url(self):
         object_id = self.object.pk
@@ -109,3 +109,26 @@ class MailingDetailView(DetailView):
 class MailingDeleteView(DeleteView):
     model = Mailing
     success_url = reverse_lazy('mailingApp:mailing_list')
+
+
+class AttemptListView(ListView):
+    model = Attempt
+
+    def get_queryset(self):
+        mailing_id = self.kwargs.get('mailing_id')
+        queryset = super().get_queryset().filter(mailing__pk=mailing_id)
+        return queryset
+
+    def get_success_url(self):
+        mailing_id = self.kwargs.get('mailing_id')
+        detail_url = reverse_lazy('mailingApp:attempt_detail', kwargs={'pk': mailing_id})
+        return detail_url
+
+
+class AttemptDetailView(DetailView):
+    model = Attempt
+
+    def get_success_url(self):
+        object_id = self.object.pk
+        detail_url = reverse_lazy('mailingApp:attempt_detail', kwargs={'pk': object_id})
+        return detail_url
