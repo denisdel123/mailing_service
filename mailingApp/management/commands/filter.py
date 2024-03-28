@@ -1,12 +1,18 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
+
 from dateutil.relativedelta import relativedelta
-import os
 from django.core.mail import send_mail
+from django.core.management import BaseCommand
 from django.utils import timezone
 
 from mailingApp.models import Mailing, Attempt
+from mailingApp.utils import ADDRESS_MAIL_RU
 
-ADDRESS_MAIL_RU = os.environ.get("ADDRESS_MAIL_RU")
+
+class Command(BaseCommand):
+
+    def handle(self, *args, **options):
+        mailing_filter()
 
 
 def mailing_filter():
@@ -65,7 +71,6 @@ def send_email(mailing):
                 objects.next_run = date_time + timedelta(days=1)
                 objects.status = 'create'
             elif objects.periodicity == 'weekly':
-
                 objects.next_run = date_time + timedelta(weeks=1)
                 objects.status = 'create'
             elif objects.periodicity == 'monthly':
@@ -78,4 +83,3 @@ def send_email(mailing):
                 objects.status = 'completed'
             objects.save()
             print(objects.status)
-
