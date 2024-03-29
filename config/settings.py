@@ -128,12 +128,14 @@ MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # добавлено дополнительно
+
 CRONJOBS = [
-    ('* * * * *', 'mailingApp.utils.mailing_filter'),
+    ('*/1 * * * *', 'mailingApp.utils.mailing_filter')
 ]
 
 PASSWORD_MAIL_RU = os.getenv('PASSWORD_MAIL_RU')
 ADDRESS_MAIL_RU = os.environ.get("ADDRESS_MAIL_RU")
+
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.mail.ru'

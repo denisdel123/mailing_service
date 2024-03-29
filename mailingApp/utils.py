@@ -1,6 +1,7 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
 from dateutil.relativedelta import relativedelta
 import os
+import logging
 from django.core.mail import send_mail
 from django.utils import timezone
 
@@ -11,9 +12,7 @@ ADDRESS_MAIL_RU = os.environ.get("ADDRESS_MAIL_RU")
 
 def mailing_filter():
     date_time = timezone.now()
-
     mailings = Mailing.objects.all()
-    print(mailings)
 
     for mailing in mailings:
         at_end = mailing.at_end
@@ -23,24 +22,18 @@ def mailing_filter():
         else:
             pass
     mailings_filtered = mailings.filter(status='create')
-    print(mailings_filtered)
 
     send_email(mailings_filtered)
 
 
 def send_email(mailing):
+    logging.info("send_email")
     date_time = timezone.now()
-    print(mailing)
     for objects in mailing:
 
         at_start = objects.at_start
         at_end = objects.at_end
         next_run = objects.next_run
-        print(objects)
-        print(at_start)
-        print(date_time)
-        print(at_end)
-        print(next_run)
 
         if at_start <= date_time <= at_end and date_time >= next_run:
             objects.status = 'launched'
@@ -48,7 +41,6 @@ def send_email(mailing):
             text = objects.massage.text
             clients = objects.client.all()
             clients_email = [client.email for client in clients]
-            print(clients_email)
 
             try:
                 status = send_mail(subject=title,
@@ -65,7 +57,6 @@ def send_email(mailing):
                 objects.next_run = date_time + timedelta(days=1)
                 objects.status = 'create'
             elif objects.periodicity == 'weekly':
-
                 objects.next_run = date_time + timedelta(weeks=1)
                 objects.status = 'create'
             elif objects.periodicity == 'monthly':
@@ -77,5 +68,3 @@ def send_email(mailing):
             else:
                 objects.status = 'completed'
             objects.save()
-            print(objects.status)
-

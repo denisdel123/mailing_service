@@ -66,7 +66,7 @@ class Mailing(models.Model):
 class Attempt(models.Model):
     at_last_attempt = models.DateTimeField(verbose_name='Дата последней попытки', auto_now_add=True)
     status_attempt = models.BooleanField(verbose_name='Статус', default=False)
-    answer_mail = models.CharField(max_length=100, **NULLABLE)
+    answer_mail = models.TextField(max_length=100, **NULLABLE)
     mailing = models.ForeignKey(Mailing, on_delete=models.CASCADE, verbose_name='Рассылка', **NULLABLE)
 
     def __str__(self):
