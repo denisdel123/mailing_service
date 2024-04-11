@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'mailingApp',
+    'usersApp',
     'django_crontab',
 
 ]
@@ -144,3 +145,8 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = ADDRESS_MAIL_RU
 EMAIL_HOST_PASSWORD = PASSWORD_MAIL_RU
 DEFAULT_FROM_EMAIL = ADDRESS_MAIL_RU
+
+AUTH_USER_MODEL = 'usersApp.User'
+LOGOUT_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = '/users/'

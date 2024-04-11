@@ -1,8 +1,8 @@
 from django.urls import path
 
 from mailingApp.apps import MailingappConfig
-from mailingApp.views import ClientListView, main, ClientCreateView, ClientUpdateView, ClientDetailView, \
-    ClientDeleteView, MailingListView, MailingCreateView, MailingUpdateView, \
+from mailingApp.views import main, \
+    MailingListView, MailingCreateView, MailingUpdateView, \
     MailingDetailView, MailingDeleteView, MassageListView, MassageCreateView, MassageDetailView, MassageUpdateView, \
     MassageDeleteView, AttemptListView, AttemptDetailView
 
@@ -12,11 +12,11 @@ urlpatterns = [
 
     path('', main, name='main'),
 
-    path('client/list', ClientListView.as_view(), name='client_list'),
-    path('client/create', ClientCreateView.as_view(), name='client_create'),
-    path('client/<int:pk>', ClientDetailView.as_view(), name='client_detail'),
-    path('client/update/<int:pk>', ClientUpdateView.as_view(), name='client_update'),
-    path('client/delete/<int:pk>', ClientDeleteView.as_view(), name='client_delete'),
+    #path('client/list', ClientListView.as_view(), name='client_list'),
+    #path('client/create', ClientCreateView.as_view(), name='client_create'),
+    #path('client/<int:pk>', ClientDetailView.as_view(), name='client_detail'),
+    #path('client/update/<int:pk>', ClientUpdateView.as_view(), name='client_update'),
+    #path('client/delete/<int:pk>', ClientDeleteView.as_view(), name='client_delete'),
 
     path('massage/list/', MassageListView.as_view(), name='massage_list'),
     path('massage/create/', MassageCreateView.as_view(), name='massage_create'),

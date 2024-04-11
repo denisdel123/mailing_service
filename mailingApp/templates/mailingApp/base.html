@@ -76,7 +76,7 @@
         <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link " href="{% url 'mailingApp:client_list' %}">Пользователи</a>
+                    <a class="nav-link " href="{% url 'usersApp:list' %}">Пользователи</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'mailingApp:mailing_list' %}">Рассылки</a>
@@ -90,10 +90,21 @@
                     </ul>
                 </li>
             </ul>
-            <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
+            {% if user.is_authenticated %}
+            <form method="post" action="{% url 'usersApp:logout' %}">
+                {% csrf_token %}
+                <button class="btn btn-outline-primary" type="submit">Выйти</button>
             </form>
+            {% else %}
+             <form method="post" action="{% url 'usersApp:login' %}">
+                {% csrf_token %}
+                <button class="btn btn-outline-primary" type="submit">Войти</button>
+            </form>
+            <form method="post" action="{% url 'usersApp:registration' %}">
+                {% csrf_token %}
+                <button class="btn btn-outline-primary" type="submit">Регистрация</button>
+            </form>
+            {% endif %}
         </div>
     </div>
 </nav>

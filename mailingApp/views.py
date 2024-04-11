@@ -2,45 +2,11 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView
 
-from mailingApp.models import Client, Massage, Attempt, Mailing
-
-
-class ClientCreateView(CreateView):
-    model = Client
-    fields = ('first_name', 'last_name', 'email', 'description',)
-    success_url = reverse_lazy('mailingApp:client_list')
-
-
-class ClientUpdateView(UpdateView):
-    model = Client
-    fields = ('first_name', 'last_name', 'email', 'description',)
-
-    def get_success_url(self):
-        object_id = self.object.pk
-        detail_url = reverse_lazy('mailingApp:client_detail', kwargs={'pk': object_id})
-        return detail_url
-
-
-class ClientListView(ListView):
-    model = Client
+from mailingApp.models import Massage, Attempt, Mailing
 
 
 def main(request):
     return render(request, 'mailingApp/main.html')
-
-
-class ClientDetailView(DetailView):
-    model = Client
-
-    def get_success_url(self):
-        object_id = self.object.pk
-        detail_url = reverse_lazy('mailingApp:client_detail', kwargs={'pk': object_id})
-        return detail_url
-
-
-class ClientDeleteView(DeleteView):
-    model = Client
-    success_url = reverse_lazy('mailingApp:client_list')
 
 
 class MassageCreateView(CreateView):
