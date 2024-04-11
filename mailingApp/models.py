@@ -1,5 +1,7 @@
 from django.db import models
 
+from usersApp.models import User
+
 NULLABLE = {
     'blank': True,
     'null': True
@@ -16,20 +18,6 @@ STATUS_MAILING = {
     ('launched', 'Запущена'),
     ('completed', 'Завершена'),
 }
-
-
-class Client(models.Model):
-    first_name = models.CharField(max_length=50, verbose_name='Имя')
-    last_name = models.CharField(max_length=50, verbose_name='Фамилия')
-    email = models.EmailField(verbose_name='Электронная почта')
-    description = models.TextField(verbose_name='Описание', **NULLABLE)
-
-    def __str__(self):
-        return f'{self.first_name}, {self.last_name}'
-
-    class Meta:
-        verbose_name = 'Клиент'
-        verbose_name_plural = 'Клиенты'
 
 
 class Massage(models.Model):
@@ -52,7 +40,7 @@ class Mailing(models.Model):
     at_end = models.DateTimeField(verbose_name='Дата окончания отправки')
     status = models.CharField(max_length=20, choices=STATUS_MAILING, verbose_name='Статус', default='create')
     massage = models.ForeignKey(Massage, verbose_name='Сообщение', on_delete=models.CASCADE)
-    client = models.ManyToManyField(Client, verbose_name='Клиент')
+    user = models.ManyToManyField(User, verbose_name='Пользователь')
     next_run = models.DateTimeField(verbose_name='Дата и время отправки')
 
     def __str__(self):

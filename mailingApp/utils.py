@@ -39,14 +39,14 @@ def send_email(mailing):
             objects.status = 'launched'
             title = objects.massage.title
             text = objects.massage.text
-            clients = objects.client.all()
-            clients_email = [client.email for client in clients]
+            users = objects.user.all()
+            users_email = [user.email for user in users]
 
             try:
                 status = send_mail(subject=title,
                                    message=text,
                                    from_email=ADDRESS_MAIL_RU,
-                                   recipient_list=clients_email,
+                                   recipient_list=users_email,
                                    )
                 Attempt.objects.create(status_attempt=status, mailing=objects)
 
