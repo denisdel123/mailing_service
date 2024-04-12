@@ -15,7 +15,7 @@
                     </form>
                 </div>
                 <div class="card-footer">
-                    <form method="post" action="#">
+                    <form method="post" action="{% url 'usersApp:forgot_pass' %}">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-success">Забыли пароль?</button>
                     </form>
