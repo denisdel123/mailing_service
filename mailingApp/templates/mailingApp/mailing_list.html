@@ -3,10 +3,11 @@
 
 
 <div class="my-3 p-3 bg-body rounded shadow-sm">
-
+    {% if perms.mailingApp.view_mailing %}
     <small class="d-block text-end mt-3">
         <a href="{% url 'mailingApp:mailing_create' %}">Создать рассылку</a>
     </small>
+    {% endif %}
 
     <small class="d-block text-end mt-3">
         <a href="#">Архив</a>
@@ -36,7 +37,6 @@
 
             </div>
 
-            <span class="d-block">mail</span>
         </div>
     </div>
     {% endif%}

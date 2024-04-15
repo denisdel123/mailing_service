@@ -74,31 +74,39 @@
         </button>
 
         <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
+            {#{% if user.has_perm('mailing.')%}#}
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link " href="{% url 'usersApp:list' %}">Пользователи</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'mailingApp:mailing_list' %}">Рассылки</a>
+                    <a class="nav-link " href="#">Блог</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown" aria-expanded="false">Настройки</a>
                     <ul class="dropdown-menu">
+                        {% if perms.mailingApp.view_massage %}
                         <li><a class="dropdown-item" href="{% url 'mailingApp:massage_list' %}">Сообщение</a></li>
-                        <li><a class="dropdown-item" href="#">Периодичность</a></li>
-                        <li><a class="dropdown-item" href="#">Настройки рассылки</a></li>
+                        {% endif %}
+                        {% if perms.mailingApp.view_mailing %}
+                        <li><a class="dropdown-item" href="{% url 'mailingApp:mailing_list' %}">Рассылки</a></li>
+                        {% endif %}
+                        {% if perms.usersApp.view %}
+                        <li><a class="dropdown-item" href="{% url 'usersApp:list' %}">Пользователи</a></li>
+                        {% endif %}
+
                     </ul>
                 </li>
             </ul>
             {% if user.is_authenticated %}
             <form method="post" action="{% url 'usersApp:logout' %}">
                 {% csrf_token %}
-                <button class="btn btn-outline-primary" type="submit">Выйти</button>
+                <a href="/admin" class="btn btn-outline-warning" type="submit">Администратор</a>
+                <a href="{% url 'usersApp:detail' user.pk %}" class="btn btn-outline-secondary" type="submit">Профиль</a>
+                <button class="btn btn-outline-danger" type="submit">Выйти</button>
             </form>
             {% else %}
-             <form method="post" action="{% url 'usersApp:login' %}">
+            <form method="post" action="{% url 'usersApp:login' %}">
                 {% csrf_token %}
-                <button class="btn btn-outline-primary" type="submit">Войти</button>
+                <a href="/admin" class="btn btn-outline-warning" type="submit">Администратор</a>
+                <button class="btn btn-outline-success" type="submit">Войти</button>
             </form>
             <form method="post" action="{% url 'usersApp:registration' %}">
                 {% csrf_token %}

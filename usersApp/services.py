@@ -3,6 +3,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import send_mail
 import os
 
+from django.http import request
 from django.utils.crypto import get_random_string
 
 from config.settings import ADDRESS_MAIL_RU
@@ -19,8 +20,8 @@ def send_mail_all(subject, message, recipient_list):
             from_email=ADDRESS_MAIL_RU
         )
         return True
-    except Exception as error:
-        return error
+    except Exception:
+        return False
 
 
 def send_new_password(email):
@@ -43,5 +44,16 @@ def send_new_password(email):
         user.save()
         return {'success': 'usersApp:login'}
     else:
-        message_error = f'Ошибка отправки Email: {send_result}'
+        message_error = f'Ошибка отправки Email!'
         return {'success': 'usersApp/forgot_password.html', 'context': {'error_message': message_error}}
+
+
+def s_email_confirm(email):
+    code = get_random_string(5)
+    user = User.objects.get(email=email)
+    subject = 'Подтверждение пользователя'
+    message = f'ваш одноразовый код: {code}'
+    user.code = code
+    user.save()
+    send_mail_all(subject, message, [email])
+

@@ -3,10 +3,11 @@
 
 
 <div class="my-3 p-3 bg-body rounded shadow-sm">
-
+    {% if perms.mailingApp.add_massage %}
     <small class="d-block text-end mt-3">
         <a href="{% url 'mailingApp:massage_create' %}">Создать Сообщение</a>
     </small>
+    {% endif %}
 
     <h6 class="border-bottom pb-2 mb-0">Сообщения</h6>
     {% for object in object_list %}
@@ -25,8 +26,6 @@
                 <strong class="text-gray-dark">{{ object.text|truncatechars:10 }}</strong>
                 <a href="{% url 'mailingApp:massage_detail' object.pk %}">Перейти</a>
             </div>
-
-            <span class="d-block">mail</span>
         </div>
     </div>
     {% endfor%}
