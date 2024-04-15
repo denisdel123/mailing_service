@@ -1,0 +1,28 @@
+{% extends 'mailingApp/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-3"></div>
+    <div class="col-6">
+        <div class="card">
+            <div class="card-header">ВВедите код отправленный на почту</div>
+            <div class="card-body">
+                <form method="post" action="{% url 'usersApp:email_confirm' %}">
+                    {% csrf_token %}
+                    <input type="text" id="text" name="text">
+                    <button type="submit" class="btn btn-success">Подтвердить</button>
+                </form>
+            </div>
+            <div class="card-footer">
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
