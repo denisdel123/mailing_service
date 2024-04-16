@@ -61,9 +61,9 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
             return form_class
 
 
-class UserListView(PermissionRequiredMixin, LoginRequiredMixin, ListView):
+class UserListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = User
-    permission_required = 'userApp.view_user'
+    permission_required = 'usersApp.view_user'
 
 
 class UserDetailView(LoginRequiredMixin, DetailView):
@@ -76,9 +76,10 @@ class UserDetailView(LoginRequiredMixin, DetailView):
         return detail_url
 
 
-class UserDeleteView(LoginRequiredMixin, DeleteView):
+class UserDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = User
     success_url = reverse_lazy('usersApp:list')
+    permission_required = 'usersApp.delete_view'
 
 
 def forgot_password(request):

@@ -88,10 +88,10 @@
                         {% if perms.mailingApp.view_mailing %}
                         <li><a class="dropdown-item" href="{% url 'mailingApp:mailing_list' %}">Рассылки</a></li>
                         {% endif %}
-                        {% if perms.usersApp.view %}
+                        {% if perms.usersApp.view_user %}
                         <li><a class="dropdown-item" href="{% url 'usersApp:list' %}">Пользователи</a></li>
                         {% endif %}
-
+                        <li><a class="dropdown-item" href="{% url 'mailingApp:client_list' %}">Клиенты</a></li>
                     </ul>
                 </li>
             </ul>

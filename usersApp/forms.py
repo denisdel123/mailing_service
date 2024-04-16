@@ -1,4 +1,4 @@
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm, PasswordChangeForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django import forms
 from django.forms import CheckboxInput
 
@@ -32,7 +32,7 @@ class ManagerUpdateForm(StyleFormMixin, UserChangeForm):
 
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'avatar', 'email', 'password', 'is_active', ]
+        fields = ['is_active']
 
 
 class SuperuserUpdateForm(StyleFormMixin, UserChangeForm):

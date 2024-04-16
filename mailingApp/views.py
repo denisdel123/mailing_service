@@ -4,11 +4,85 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView
 
-from mailingApp.models import Massage, Attempt, Mailing
+from mailingApp.forms import \
+    SuperuserMassageForm, UserMassageForm, SuperuserClientForm, \
+    UserClientForm, SuperuserMailingForm, UserMailingForm, ManagerMailingForm
+from mailingApp.models import Massage, Attempt, Mailing, Client
+
 
 @login_required
 def main(request):
     return render(request, 'mailingApp/main.html')
+
+
+class ClientCreateView(LoginRequiredMixin, CreateView):
+    model = Client
+
+    def get_form_class(self):
+        if self.request.user.is_superuser:
+            form_class = SuperuserClientForm
+            return form_class
+        else:
+            form_class = UserClientForm
+            return form_class
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.owner = self.request.user
+        self.object.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        object_id = self.object.pk
+        detail_url = reverse_lazy('mailingApp:client_detail', kwargs={'pk': object_id})
+        return detail_url
+
+
+class ClientListView(LoginRequiredMixin, ListView):
+    model = Client
+
+    def get_queryset(self):
+        if self.request.user.is_superuser or self.request.user.has_perm('mailingApp.set_view'):
+            queryset = super().get_queryset().all()
+            return queryset
+        else:
+            user_id = self.request.user.pk
+            queryset = super().get_queryset().filter(owner__id=user_id)
+            return queryset
+
+
+
+
+class ClientDetailView(LoginRequiredMixin, DetailView):
+    model = Client
+
+    def get_success_url(self):
+        object_id = self.object.pk
+        detail_url = reverse_lazy('mailingApp:client_detail', kwargs={'pk': object_id})
+        return detail_url
+
+
+class ClientUpdateView(LoginRequiredMixin, UpdateView):
+    model = Client
+
+    def get_success_url(self):
+        object_id = self.object.pk
+        detail_url = reverse_lazy('mailingApp:client_detail', kwargs={'pk': object_id})
+        return detail_url
+
+    def get_form_class(self):
+        if self.request.user.is_superuser:
+            form_class = SuperuserClientForm
+            return form_class
+
+        else:
+            form_class = UserClientForm
+            return form_class
+
+
+class ClientDeleteView(LoginRequiredMixin, DeleteView):
+    model = Client
+    success_url = 'mailingApp:client_list'
 
 
 class MassageCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
@@ -16,6 +90,20 @@ class MassageCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView)
     fields = ('title', 'text',)
     permission_required = 'mailingApp.add_massage'
     success_url = reverse_lazy('mailingApp:massage_list')
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.owner = self.request.user
+        self.object.save()
+        return super().form_valid(form)
+
+    def get_form_class(self):
+        if self.request.user.is_superuser:
+            form_class = SuperuserMassageForm
+            return form_class
+        else:
+            form_class = UserMassageForm
+            return form_class
 
 
 class MassageUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
@@ -28,10 +116,27 @@ class MassageUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView)
         detail_url = reverse_lazy('mailingApp:massage_detail', kwargs={'pk': object_id})
         return detail_url
 
+    def get_form_class(self):
+        if self.request.user.is_superuser:
+            form_class = SuperuserMassageForm
+            return form_class
+        else:
+            form_class = UserMassageForm
+            return form_class
+
 
 class MassageListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = Massage
     permission_required = 'mailingApp.view_massage'
+
+    def get_queryset(self):
+        if self.request.user.is_superuser or self.request.user.has_perm('mailingApp.set_view'):
+            queryset = super().get_queryset().all()
+            return queryset
+        else:
+            user_id = self.request.user.pk
+            queryset = super().get_queryset().filter(owner__id=user_id)
+            return queryset
 
 
 class MassageDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
@@ -53,24 +158,56 @@ class MassageDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView)
 class MailingCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Mailing
     permission_required = 'mailingApp.add_mailing'
-    fields = ('name', 'description', 'periodicity', 'at_start', 'at_end', 'massage', 'user', 'next_run',)
     success_url = reverse_lazy('mailingApp:mailing_list')
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.owner = self.request.user
+        self.object.save()
+        return super().form_valid(form)
+
+    def get_form_class(self):
+        if self.request.user.is_superuser:
+            form_class = SuperuserMailingForm
+            return form_class
+        else:
+            form_class = UserMailingForm
+            return form_class
 
 
 class MailingUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Mailing
     permission_required = 'mailingApp.change_mailing'
-    fields = ('name', 'description', 'periodicity', 'at_start', 'at_end', 'massage', 'user', 'next_run',)
 
     def get_success_url(self):
         object_id = self.object.pk
         detail_url = reverse_lazy('mailingApp:mailing_detail', kwargs={'pk': object_id})
         return detail_url
 
+    def get_form_class(self):
+        if self.request.user.is_superuser:
+            form_class = SuperuserMailingForm
+            return form_class
+        elif self.request.user.has_perm('mailingApp.set_status'):
+            form_class = ManagerMailingForm
+            return form_class
+        else:
+            form_class = UserMailingForm
+            return form_class
+
 
 class MailingListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = Mailing
     permission_required = 'mailingApp.view_mailing'
+
+    def get_queryset(self):
+        if self.request.user.is_superuser or self.request.user.has_perm('mailingApp.set_view'):
+            queryset = super().get_queryset().all()
+            return queryset
+        else:
+            user_id = self.request.user.pk
+            queryset = super().get_queryset().filter(owner__id=user_id)
+            return queryset
 
 
 class MailingDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
@@ -112,4 +249,3 @@ class AttemptDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView)
         object_id = self.object.pk
         detail_url = reverse_lazy('mailingApp:attempt_detail', kwargs={'pk': object_id})
         return detail_url
-
