@@ -14,9 +14,11 @@
                         <button type="submit" class="btn btn-success">Сохранить</button>
                     </form>
                 </div>
+                {% if user == user_profile %}
                 <div class="card-footer">
                     <a href="{% url 'usersApp:change_pass' %}" class="btn btn-danger">Сменить пароль</a>
                 </div>
+                {% endif %}
             </div>
         </div>
     </div>

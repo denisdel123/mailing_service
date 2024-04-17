@@ -27,13 +27,6 @@ class UserUpdateForm(StyleFormMixin, UserChangeForm):
         fields = ['first_name', 'last_name', 'avatar', 'email', 'password', ]
 
 
-class ManagerUpdateForm(StyleFormMixin, UserChangeForm):
-    password = forms.CharField(widget=forms.HiddenInput)
-
-    class Meta:
-        model = User
-        fields = ['is_active']
-
 
 class SuperuserUpdateForm(StyleFormMixin, UserChangeForm):
     password = forms.CharField(widget=forms.HiddenInput)
