@@ -1,6 +1,6 @@
 {% extends 'mailingApp/base.html' %}
-{% block content %}
 {% load my_tags %}
+{% block content %}
 <tr>
     <h1>Профиль</h1>
 </tr>
@@ -65,14 +65,30 @@
             <a href="{% url 'usersApp:list'%}"
                class="btn btn-lg btn-block btn-outline-primary">Назад</a>
             {% endif %}
+            {% if user == object %}
             <a href="{% url 'usersApp:update' object.pk %}" class="btn btn-lg btn-block btn-outline-primary">Редактировать</a>
+            {% endif %}
+
             {% if perms.usersApp.delete_user %}
             <a href="{% url 'usersApp:delete' object.pk %}" class="btn btn-lg btn-block btn-outline-primary">Удалить</a>
             {% endif %}
 
 
         </div>
-        {% if user.is_confirm is not True and user == profile_user %}
+        {% if perms.usersApp.set_active %}
+        <form method="post" action="{% url 'usersApp:block_user' object.pk %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">
+                {% if object.is_active %}
+                Заблокировать
+                {% else %}
+                Разблокировать
+                {% endif %}
+            </button>
+        </form>
+        {% endif %}
+
+        {% if user.is_confirm is not True and user == object %}
         <form method="post" action="{% url 'usersApp:send_code' %}">
             {% csrf_token %}
             <button type="submit" class="btn btn-success">Авторизоваться</button>
