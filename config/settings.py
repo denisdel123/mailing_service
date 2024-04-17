@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'mailingApp',
     'usersApp',
     'django_crontab',
+    'blogApp',
 
 ]
 
