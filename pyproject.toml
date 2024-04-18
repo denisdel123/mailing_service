@@ -13,6 +13,7 @@ pillow = "^10.2.0"
 psycopg2 = "^2.9.9"
 python-dateutil = "^2.9.0.post0"
 django-crontab = "^0.7.1"
+transliterate = "^1.10.2"
 
 
 [tool.poetry.group.dev.dependencies]
