@@ -1,0 +1,99 @@
+{% extends 'mailingApp/base.html' %}
+{% block content %}
+{% load my_tags%}
+
+<div class="header">
+
+</div>
+
+<div class="row">
+
+    <div class="left-column">
+
+        <div class="card">
+            <div class="card-header">
+                <h1>{{object.title}}</h1>
+                <div class="image-container">
+                    <img src="{{ object.image|mymedia}}" width="200" height="200">
+                </div>
+            </div>
+            <div class="card-body">
+                <h5>Дата публикации: {{object.at_published}}</h5>
+                <h5>Дата Создания: {{object.at_create}}</h5>
+            </div>
+
+            <div class="card-footer"></div>
+
+
+        </div>
+
+
+        <div class="card">
+            <div class="card-header">
+                <h3>Описание</h3>
+                <h5>{{object.body}}</h5>
+            </div>
+            {% if object.owner == user %}
+            <div class="card-body">
+                <form style="float: left;" method="post" action="{% url 'blogApp:publication' object.pk %}">
+                    {% csrf_token %}
+                    <button class="btn btn-info">{% if object.is_published %}
+                        Снять с публикации
+                        {% else %}
+                        Опубликовать
+                        {% endif %}
+                    </button>
+                </form>
+                <a href="{% url 'blogApp:update' object.pk %}" class="btn btn-success">Редактировать</a>
+                <a href="{% url 'blogApp:delete' object.pk %}" class="btn btn-danger">Удалить</a>
+
+            </div>
+
+            {% endif %}
+        </div>
+
+    </div>
+
+    <div class="rightcolumn">
+
+        <div class="card">
+            <h3>Автор публикации</h3>
+            <div class="image-container">
+                <img src="{{ object.owner.avatar|mymedia}}" width="100" height="100">
+            </div>
+            <p>Имя: {% if object.owner.first_name %}
+                {{object.owner.first_name}}
+                {% else %}
+                Не указанно
+                {% endif %}
+            </p>
+            <p>Фамилия: {% if object.owner.last_name %}
+                {{object.owner.last_name}}
+                {% else %}
+                Не указанно
+                {% endif %}
+            </p>
+        </div>
+
+        <div class="card">
+            <h3>Популярные посты</h3>
+            <div class="fakeimg">Image</div>
+            <br>
+            <div class="fakeimg">Image</div>
+            <br>
+            <div class="fakeimg">Image</div>
+        </div>
+
+        <div class="card">
+            <h3>Follow Me</h3>
+            <p>Some text..</p>
+        </div>
+
+    </div>
+</div>
+
+<div class="footer">
+
+</div>
+
+{% endblock %}
