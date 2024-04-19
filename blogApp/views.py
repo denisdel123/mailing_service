@@ -1,4 +1,3 @@
-
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
@@ -28,7 +27,11 @@ class BlogListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     permission_required = 'blogApp.view_blog'
 
     def get_queryset(self):
-        queryset = super().get_queryset().filter(is_published=True)
+        if self.request.user.is_superuser:
+            queryset = super().get_queryset().all()
+        else:
+            queryset = super().get_queryset().filter(is_published=True)
+
         return queryset
 
 
@@ -83,6 +86,7 @@ class BlogUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
 
 class BlogDeleteView(DeleteView):
     model = Blog
+    success_url = reverse_lazy('blogApp:list')
 
 
 def publication(request, pk):

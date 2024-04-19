@@ -1,4 +1,5 @@
 from django.urls import path
+from django.views.decorators.cache import cache_page
 
 from usersApp.apps import UsersappConfig
 from usersApp.views import LoginView, LogoutView, RegistrationView, UserUpdateView, UserListView, UserDetailView, \
@@ -14,7 +15,7 @@ urlpatterns = [
     path('list/', UserListView.as_view(), name='list'),
     path('update/<int:pk>', UserUpdateView.as_view(), name='update'),
     path('detail/<int:pk>/', UserDetailView.as_view(), name='detail'),
-    path('profile/', UserProfile.as_view(), name='profile'),
+    path('profile/',UserProfile.as_view(), name='profile'),
     path('delete/<int:pk>/', UserDeleteView.as_view(), name='delete'),
 
 

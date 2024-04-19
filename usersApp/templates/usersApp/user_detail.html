@@ -1,9 +1,6 @@
 {% extends 'mailingApp/base.html' %}
 {% block content %}
 {% load my_tags %}
-<tr>
-    <h1>Профиль</h1>
-</tr>
 
 <div class="image-container">
 
@@ -11,89 +8,194 @@
     <img src="{{ object.photo|mymedia }}" width="200" height="200">
 </div>
 
-<div class="col-lg-9 col-md-6 col-sm-12">
-    <div class="card mb-4 box-shadow">
-        <div class="card-body">
-            <table class="table table-striped">
+<div class="col-12">
 
-                <tr>
-                    <td class="w-25">Имя</td>
-                    <td>{{ object.first_name }}</td>
-                </tr>
+    <div class="row">
 
-                <tr>
-                    <td class="w-25">Фамилия</td>
-                    <td>{{ object.last_name }}</td>
+        <div class="col-6">
 
-                </tr>
+            <div class="card mb-4 box-shadow">
 
-                <tr>
-                    <td class="w-25">Почта</td>
-                    <td>{{object.email}}</td>
-                </tr>
+                <div class="card-header">
+                    <tr>
+                        <h1>Профиль</h1>
+                    </tr>
+                </div>
 
-                <tr>
-                    <td class="w-25">Подтверждение</td>
-                    {% if object.is_confirm %}
-                    <td>Да</td>
-                    {% else %}
-                    <td>Нет</td>
+                <div class="card-body">
+
+                    <table class="table table-striped">
+
+                        <tr>
+                            <td class="w-25">Имя</td>
+                            <td>{{ object.first_name }}</td>
+                        </tr>
+
+                        <tr>
+                            <td class="w-25">Фамилия</td>
+                            <td>{{ object.last_name }}</td>
+
+                        </tr>
+
+                        <tr>
+                            <td class="w-25">Почта</td>
+                            <td>{{object.email}}</td>
+                        </tr>
+
+                        <tr>
+                            <td class="w-25">Подтверждение</td>
+                            {% if object.is_confirm %}
+                            <td>Да</td>
+                            {% else %}
+                            <td>Нет</td>
+                            {% endif %}
+                        </tr>
+
+                        <tr>
+                            <td class="w-25">Права менеджера</td>
+                            {% if object.is_staff%}
+                            <td>Да</td>
+                            {% else %}
+                            <td>Нет</td>
+                            {% endif %}
+                        </tr>
+
+                        <tr>
+                            <td class="w-25">Права администратора</td>
+                            {% if object.is_superuser%}
+                            <td>Да</td>
+                            {% else %}
+                            <td>Нет</td>
+                            {% endif %}
+                        </tr>
+
+
+                    </table>
+
+                    {% if perms.usersApp.view_user %}
+                    <a href="{% url 'usersApp:list'%}"
+                       class="btn btn-lg btn-block btn-outline-primary">Назад</a>
                     {% endif %}
-                </tr>
 
-                <tr>
-                    <td class="w-25">Права менеджера</td>
-                    {% if object.is_staff%}
-                    <td>Да</td>
-                    {% else %}
-                    <td>Нет</td>
+                    {% if user == object %}
+                    <a href="{% url 'usersApp:update' object.pk %}" class="btn btn-lg btn-block btn-outline-primary">Редактировать</a>
                     {% endif %}
-                </tr>
 
-                <tr>
-                    <td class="w-25">Права администратора</td>
-                    {% if object.is_superuser%}
-                    <td>Да</td>
-                    {% else %}
-                    <td>Нет</td>
+                    {% if perms.usersApp.delete_user %}
+                    <a href="{% url 'usersApp:delete' object.pk %}"
+                       class="btn btn-lg btn-block btn-outline-primary">Удалить</a>
                     {% endif %}
-                </tr>
 
+                </div>
 
-            </table>
-            {% if perms.usersApp.view_user %}
-            <a href="{% url 'usersApp:list'%}"
-               class="btn btn-lg btn-block btn-outline-primary">Назад</a>
-            {% endif %}
-            {% if user == object %}
-            <a href="{% url 'usersApp:update' object.pk %}" class="btn btn-lg btn-block btn-outline-primary">Редактировать</a>
-            {% endif %}
+                <div class="card-footer">
 
-            {% if perms.usersApp.delete_user %}
-            <a href="{% url 'usersApp:delete' object.pk %}" class="btn btn-lg btn-block btn-outline-primary">Удалить</a>
-            {% endif %}
+                    {% if perms.usersApp.set_active and not user == object %}
+                    <form method="post" action="{% url 'usersApp:block_user' object.pk %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">
+                            {% if object.is_active %}
+                            Заблокировать
+                            {% else %}
+                            Разблокировать
+                            {% endif %}
+                        </button>
+                    </form>
+                    {% endif %}
 
+                    {% if user.is_confirm is not True and user == object %}
+                    <form method="post" action="{% url 'usersApp:send_code' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success">Авторизоваться</button>
+                    </form>
+                    {% endif %}
+
+                </div>
+
+            </div>
 
         </div>
-        {% if perms.usersApp.set_active %}
-        <form method="post" action="{% url 'usersApp:block_user' object.pk %}">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-danger">
-                {% if object.is_active %}
-                Заблокировать
-                {% else %}
-                Разблокировать
-                {% endif %}
-            </button>
-        </form>
-        {% endif %}
 
-        {% if user.is_confirm is not True and user == object %}
-        <form method="post" action="{% url 'usersApp:send_code' %}">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-success">Авторизоваться</button>
-        </form>
-        {% endif %}
+        <div class="col-3">
+
+            <div class="card">
+
+                <div class="card-header">Список клиентов</div>
+
+                <div class="card-body">
+
+                    {% for client in clients %}
+                    <div class="d-flex text-body-secondary pt-3">
+
+                        <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32"
+                             xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32"
+                             preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title>
+                            <rect width="100%" height="100%" fill="#007bff"/>
+                            <text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text>
+                        </svg>
+
+                        <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
+                            <div class="d-flex justify-content-between">
+                                <strong class="text-gray-dark">{{ client.first_name}} {{ client.last_name }}</strong>
+                                <a href="{% url 'mailingApp:client_detail' object.pk %}">Перейти</a>
+                            </div>
+
+                            <span class="d-block">{{ client.email }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-3">
+
+            <div class="card">
+
+                <div class="card-header">Список рассылок</div>
+
+                <div class="card-body">
+
+                    {% for mailing in mailings %}
+                    <div class="d-flex text-body-secondary pt-3">
+
+                        <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32"
+                             xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32"
+                             preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title>
+                            <rect width="100%" height="100%" fill="#007bff"/>
+                            <text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text>
+                        </svg>
+
+                        <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
+
+                            <div class="d-flex justify-content-between">
+                                <strong class="text-gray-dark">{{ mailing.name }}</strong>
+                                {% if mailing.status == 'create'%}
+                                <strong class="text-gray-dark">Создана</strong>
+                                {% elif mailing.status == 'launched' %}
+                                <strong class="text-gray-dark">Запущена</strong>
+                                {% endif %}
+                                <a href="{% url 'mailingApp:mailing_detail' object.pk %}">Перейти</a>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
+
 </div>
 {% endblock %}

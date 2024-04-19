@@ -1,20 +1,29 @@
+from random import sample
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView, DetailView
 
+from blogApp.models import Blog
+from blogApp.services import list_main
 from mailingApp.forms import \
     SuperuserMassageForm, UserMassageForm, SuperuserClientForm, \
     UserClientForm, SuperuserMailingForm, UserMailingForm, ManagerMailingForm
 from mailingApp.models import Massage, Attempt, Mailing, Client
+from usersApp.models import User
 
 """Главная страница"""
 
 
+
+
+
 @login_required
 def main(request):
-    return render(request, 'mailingApp/main.html')
+    context = list_main()
+    return render(request, 'mailingApp/main.html', context)
 
 
 """Создание клиентов"""
