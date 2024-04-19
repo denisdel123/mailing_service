@@ -33,7 +33,7 @@
                 <h3>Описание</h3>
                 <h5>{{object.body}}</h5>
             </div>
-            {% if object.owner == user %}
+            {% if object.owner == user or user.is_superuser%}
             <div class="card-body">
                 <form style="float: left;" method="post" action="{% url 'blogApp:publication' object.pk %}">
                     {% csrf_token %}

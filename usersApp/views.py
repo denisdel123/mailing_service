@@ -1,8 +1,10 @@
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.views import LoginView as BaseLoginView, LogoutView as BaseLogoutView, PasswordChangeView
-from django.db.models import Q
+from django.core.cache import cache
+import logging
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, UpdateView, ListView, DetailView, DeleteView
@@ -12,6 +14,7 @@ from usersApp.models import User
 from usersApp.services import send_mail_all, send_new_password, s_email_confirm
 
 """Вход по почте и паролю"""
+logger = logging.getLogger(__name__)
 
 
 class LoginView(BaseLoginView):
@@ -114,6 +117,41 @@ class UserProfile(LoginRequiredMixin, DetailView):
     def get_object(self, queryset=None):
         return self.request.user
 
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+
+        client_key = f'client_list_{self.object.pk}'
+        if settings.CACHES_ENABLED:
+            client_list = cache.get(client_key)
+            if client_list is None:
+                client_list = self.object.client_set.all()
+                cache.set(client_key, client_list)
+        else:
+            client_list = self.object.client_set.all()
+        context_data['clients'] = client_list
+
+        mailing_key = f'mailing_list_{self.object.pk}'
+        if settings.CACHES_ENABLED:
+            mailing_list = cache.get(mailing_key)
+            if mailing_list is None:
+                mailing_list = self.object.mailing_set.all()
+                cache.set(mailing_key, mailing_list)
+        else:
+            mailing_list = self.object.mailing_set.all()
+        context_data['mailings'] = mailing_list
+
+        user_key = f'user_{self.object.pk}'
+        if settings.CACHES_ENABLED:
+            user = cache.get(user_key)
+            if user is None:
+                user = self.object
+                cache.set(user_key, user)
+        else:
+            user = self.object
+        context_data['object'] = user
+
+        return context_data
+
 
 """Удаление пользователя"""
 
@@ -171,7 +209,7 @@ def email_confirm(request):
         if user.code == code:
             user.is_confirm = True
             user.save()
-            return redirect(reverse('usersApp:detail', kwargs={'pk': user.pk}))
+            return redirect('usersApp:profile')
 
         else:
             messages.error(request, 'не верный код попробуйте снова!')
